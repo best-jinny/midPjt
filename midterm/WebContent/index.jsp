@@ -9,7 +9,7 @@
 <body>
 <script type="text/javascript">
 	//location.href="search/searchMain.do";
-	location.href="admin/hashtagList.do";
+	location.href="main/main.do";
 </script>
 </body>
 </html>
