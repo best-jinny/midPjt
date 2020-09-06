@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hashtagns">
+	<resultMap type="hashtag" 		id="resultMap">
+		<result property="hash_id"  column="hash_id"/>
+		<result property="hash_name" column="hash_name"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="select" parameterType="integer" resultType="hashtag">
+		select * from hashtag where hash_id=#{hash_id}
+	</select>
+	<select id="selectName" parameterType="integer" resultType="string">
+		select hash_name from hashtag where hash_id=#{hash_id}
+	</select>
+	<select id="selectNameCheck" parameterType="string" resultType="hashtag">
+		select * from hashtag where hash_name=#{subject}
+	</select>
+	<select id="search" parameterType="string" resultMap="resultMap">
+		select * from hashtag where hash_name like '%'||#{subject}||'%'
+	</select>
+	<insert id="insert" parameterType="string">
+		insert into hashtag values (hash_seq.nextval,#{hash_name})
+	</insert>
+	<select id="insertFind" parameterType="string" resultType="integer">
+		select hash_id from (select rowNum rn,hash_id from hashtag where 
+		hash_name=#{hash_name} order by hash_id desc) where rn=1
+	</select>
+	<select id="list" resultMap="resultMap">
+		select * from hashtag order by hash_id
+	</select>
+	<delete id="delete" parameterType="integer">
+		delete from hashtag where hash_id=#{hash_id}
+	</delete>
+	<select id="recent" resultType="int">
+		select hash_id from (select rowNum, a.* from (select * from hashtag order by hash_id desc) a order by rowNum) where rowNum = 1
+	</select>
+	<!-- review -->
+	<select id="selectId" parameterType="string" resultType="hashtag">
+		select * from hashtag where hash_name = #{hash_name}
+	</select>
+</mapper>

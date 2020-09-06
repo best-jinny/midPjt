@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hashkindns">
+	<resultMap type="hashkind" 		id="resultMap">
+		<result property="hashkind_id"  column="hashkind_id"/>
+		<result property="hashkind_name" column="hashkind_name"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="select" parameterType="string" resultType="hashkind">
+		select * from hashkind where hashkind_id=#{hashkind_id}
+	</select>
+	<select id="selectNameOnly" parameterType="string" resultType="string">
+		select hashkind_name from hashkind where hashkind_id=#{hashkind_id}
+	</select>
+	<select id="search" parameterType="string" resultMap="resultMap">
+		select * from hashkind where hashkind_name like '%'||#{subject}||'%'
+	</select>
+	<select id="insertFind" parameterType="string" resultType="integer">
+		select hashkind_id from (select rowNum rn,hashkind_id from hashkind where 
+		hashkind_name=#{hashkind_name} order by hashkind_id desc) where rn=1
+	</select>
+	<select id="selectList" resultMap="resultMap">
+		select * from hashkind order by hashkind_id
+	</select>
+	<select id="selectName" parameterType="string" resultType="hashkind">
+		select * from hashkind where hashkind_name=#{hashkind_name}
+	</select>
+	<delete id="delete" parameterType="integer">
+		delete from hashkind where hashkind_id=#{hashkind_id}
+	</delete>
+	<insert id="insert" parameterType="string">
+		insert into hashkind values (hashkind_seq.nextval,#{hashkind_name})
+	</insert>
+	<select id="recent" resultType="int">
+		select hashkind_id from (select rowNum, a.* from (select * from hashkind order by hashkind_id desc) a order by rowNum) where rowNum = 1
+	</select>
+</mapper>

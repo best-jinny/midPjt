@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="db.properties" />
+	<typeAliases>
+		<typeAlias alias="hashtag" type="model.Hashtag" />
+		<typeAlias alias="hashkind" type="model.HashKind" />
+		<typeAlias alias="hash_link" type="model.HashLink" />
+		<typeAlias alias="cafe_link" type="model.CafeLink" />
+		<typeAlias alias="cafe" type="model.Cafe" />
+		<typeAlias alias="member" type="model.Member" />
+		<typeAlias alias="wishlist" type="model.WishList" />
+		<typeAlias alias="image" type="model.Image" />
+		<typeAlias alias="master" type="model.Master" />
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="hashtag.xml" />
+		<mapper resource="hashkind.xml" />
+		<mapper resource="hashlink.xml" />
+		<mapper resource="cafelink.xml" />
+		<mapper resource="cafe.xml" />
+		<mapper resource="member.xml" />
+		<mapper resource="wishlist.xml" />
+		<mapper resource="image.xml" />
+		<mapper resource="master.xml" />
+	</mappers>
+</configuration>

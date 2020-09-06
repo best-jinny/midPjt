@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafens">
+	<resultMap type="cafe" 		id="resultMap">
+		<result property="cafe_id"  column="cafe_id"/>
+		<result property="cafe_name" column="cafe_name"/>
+		<result property="cafe_readcount" column="cafe_readcount"/>
+		<result property="cafe_addr" column="cafe_addr"/>
+		<result property="cafe_hours" column="cafe_hours"/>
+		<result property="cafe_tel" column="cafe_tel"/>
+		<result property="cafe_parking" column="cafe_parking"/>
+		<result property="cafe_reg_date" column="cafe_reg_date"/>
+		<result property="cafe_del" column="cafe_del"/>
+		<result property="cafe_map" column="cafe_map"/>	
+		<result property="cafe_desc" column="cafe_desc"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="select" parameterType="string" resultType="cafe">
+		select * from cafe where cafe_id=#{cafe_id}
+	</select>
+	<select id="search" parameterType="string" resultMap="resultMap">
+		select * from cafe where lower(cafe_name) like lower('%'||#{subject}||'%')
+	</select>
+	<select id="newest" parameterType="java.util.List" resultMap="resultMap">
+		select * from cafe where cafe_id in 
+		(
+		<foreach collection="list" item="item" separator=",">
+        ${item}
+    	</foreach>
+		)
+		 order by cafe_reg_date desc
+	</select>
+	<select id="hottest" parameterType="java.util.List" resultMap="resultMap">
+		select * from cafe where cafe_id in 
+		(
+		<foreach collection="list" item="item" separator=",">
+        ${item}
+    	</foreach>
+		)
+		 order by cafe_readcount desc
+	</select>
+	<update id="updateReadCnt" parameterType="cafe">
+		update cafe set cafe_readcount=cafe_readcount+1 where cafe_id=#{cafe_id}
+	</update>
+	<select id="selectTop5" resultMap = "resultMap">
+		select * from(select cafe_id, cafe_name, cafe_readcount, cafe_addr, cafe_hours, cafe_tel, cafe_parking, cafe_reg_date, cafe_map,
+				rank() over (order by cafe_readcount desc)as rank from cafe)
+				where rank&lt;=5 order by cafe_readcount desc
+	</select>
+	<select id="list" resultMap="resultMap">
+		select * from cafe order by cafe_reg_date desc
+	</select>
+	<select id="recent" resultType="int">
+		select cafe_id from (select rowNum, a.* from (select * from cafe order by cafe_reg_date desc) a order by rowNum) where rowNum = 1
+	</select>
+	<insert id="insert" parameterType="cafe">
+		insert into cafe values(cafe_seq.nextval,#{cafe_name},0,#{cafe_addr},#{cafe_hours},#{cafe_tel},#{cafe_parking},sysdate,'n',#{cafe_map},#{cafe_desc}) 
+	</insert>
+	<update id="update" parameterType="cafe">
+		update cafe set cafe_name=#{cafe_name},
+		cafe_tel=#{cafe_tel},cafe_addr=#{cafe_addr},cafe_hours=#{cafe_hours},cafe_map=#{cafe_map},cafe_parking=#{cafe_parking} where cafe_id=#{cafe_id}
+	</update>
+	<update id="delete" parameterType="int">
+		update cafe set cafe_del='y' where cafe_id=#{id}
+	</update>
+	<select id="insertFind" parameterType="string" resultType="integer">
+		select cafe_id from (select rowNum rn,cafe_id from cafe where 
+		lower(cafe_name)=lower(#{cafe_name}) order by cafe_reg_date desc) where rn=1
+	</select>
+</mapper>

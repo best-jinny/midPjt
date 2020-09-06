@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafelinkns">
+	<resultMap type="cafe_link" id="resultMap">
+		<result property="cafe_link_id"  column="cafe_link_id"/>
+		<result property="cafe_id"  column="cafe_id"/>
+		<result property="hash_id"  column="hash_id"/>
+		<result property="member_id"  column="member_id"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="select" parameterType="integer" resultMap="resultMap">
+		select * from cafe_link where hash_id=#{hash_id}
+	</select>
+	<select id="selectIdentify" parameterType="integer" resultMap="resultMap">
+		select * from cafe_link where hash_id=#{hash_id} and member_id is null
+	</select>
+	<select id="selectIdentifyMember" parameterType="cafe_link" resultMap="resultMap">
+		select * from cafe_link where hash_id=#{hash_id} and member_id=#{member_id}
+	</select>
+	<select id="selectCafe" parameterType="integer" resultMap="resultMap">
+		select * from cafe_link where cafe_id=#{cafe_id}
+	</select>
+	<select id="selectHash" parameterType="integer" resultMap="resultMap">
+		select * from cafe_link where hash_id=#{hash_id}
+	</select>
+	<insert id="insert" parameterType="cafe_link">
+		insert into cafe_link values(cafe_link_seq.nextval,#{cafe_id},#{hash_id},null)
+	</insert>
+	<delete id="delete" parameterType="cafe_link">
+		delete from cafe_link where cafe_id=#{cafe_id} and hash_id=#{hash_id} and 
+		member_id is null
+	</delete>
+	<delete id="deleteAll" parameterType="integer">
+		delete from cafe_link where hash_id=#{hash_id}
+	</delete>
+	<!-- review -->
+	<select id="check" parameterType="cafe_link" resultMap="resultMap">
+		select * from cafe_link where cafe_id=#{cafe_id} and member_id=#{member_id} and hash_id=#{hash_id}
+	</select>
+	<select id="selectCafe1" parameterType="java.util.Map" resultMap="resultMap">
+		select * from cafe_link where cafe_id=#{cafe_id} and member_id=#{member_id}
+	</select>
+	<select id="selectCafe2" parameterType="java.util.Map" resultMap="resultMap">
+		select * from cafe_link where cafe_id=#{cafe_id} and member_id is null
+	</select>
+	<select id="selectHashCafe" parameterType="integer" resultType="integer">
+		select hash_id from cafe_link where cafe_id=#{cafe_id}
+	</select>
+	<select id="selectSimilar" parameterType="hashMap" resultMap="resultMap">
+		select cafe_id, count(*) as frequency from cafe_link where hash_id in 
+		(
+		<foreach collection="s_hashList" item="hashtag" separator=",">
+		${hashtag}
+		</foreach>
+		) and cafe_id !=#{cafe_id} group by cafe_id order by frequency desc
+	</select>
+	<insert id="insertByMember" parameterType="cafe_link">
+		insert into cafe_link values(cafe_link_seq.nextval, #{cafe_id}, #{hash_id}, #{member_id})
+	</insert>
+	<select id="selectHashUser" parameterType="integer" resultMap="resultMap">
+		select distinct hash_id from cafe_link where member_id=#{member_id}
+	</select>
+</mapper>

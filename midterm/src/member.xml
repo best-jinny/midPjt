@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberns">
+	<!--configuration의 typealias -->
+	<resultMap type="member" id="resultMap">
+		<!--model의 member의 private 값들. -->
+		<result property="member_id" column="member_id" />
+		<result property="member_password" column="member_password" />
+		<result property="member_name" column="member_name" />
+		<result property="member_tel" column="member_tel" />
+		<result property="member_email" column="member_email" />
+		<result property="member_reg_date" column="member_reg_date" />
+		<result property="member_del" column="member_del" />
+	</resultMap>
+	<insert id="insert" parameterType="member">
+		insert into member
+		values(#{member_id},#{member_password},#{member_name},
+		#{member_tel},#{member_email},sysdate,'n')
+	</insert>
+	<select id="list" parameterType="hashmap" resultMap="resultMap">
+		select * from member order by member_reg_date desc 
+	</select>
+	<select id="select" parameterType="string" resultType="member">
+		select *
+		from member where member_id=#{member_id} and member_del='n'
+	</select>
+	<update id="update" parameterType="member">
+		update member set
+		member_password=#{member_password},
+		member_name=#{member_name},
+		member_email=#{member_email},
+		member_tel=#{member_tel} where member_id =#{member_id}
+	</update>
+	<update id="delete" parameterType="string">
+	update member set member_del='y' where member_id = #{member_id}
+	</update>
+</mapper>

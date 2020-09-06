@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wishlistns">
+	<resultMap type="wishlist" id="resultMap">
+		<result property="wish_id" column="wish_id" />
+		<result property="member_id" column="member_id" />
+		<result property="cafe_id" column="cafe_id" />
+		<result property="wish_reg_date" column="wish_reg_date" />
+	</resultMap>
+	<select id="list" resultMap="resultMap" parameterType="string">
+		select * from wishlist where member_id=#{member_id}
+	</select>
+	<select id="wishcheck" resultMap="resultMap" parameterType="wishlist">
+		select * from wishlist where member_id=#{member_id} and cafe_id=#{cafe_id}
+	</select>
+	<insert id="insert" parameterType="wishlist">
+		insert into wishlist values (wish_seq.nextval,#{member_id},#{cafe_id},sysdate)
+	</insert>
+	<delete id="delete" parameterType="wishlist">
+		delete from wishlist where member_id=#{member_id} and cafe_id=#{cafe_id}
+	</delete>
+	<select id="insertChk" parameterType="java.util.Map" resultType="wishlist">
+		select * from wishlist where member_id=#{member_id} and cafe_id=#{cafe_id}
+	</select> 
+	<insert id="insertCafe" parameterType="wishlist">
+		insert into wishlist values(wish_seq.nextval, #{member_id}, #{cafe_id}, sysdate)
+	</insert>
+</mapper>  

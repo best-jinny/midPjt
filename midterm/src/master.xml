@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="masterns">
+	<resultMap type="master" 			id="resultMap">
+		<result property="master_id"  		column="master_id"/>
+			<result property="master_password" column="master_password"/>
+	</resultMap>
+	<select id="select" parameterType="string" resultType="master">
+	select * from master where master_id=#{master_id}
+	</select>
+	
+</mapper>

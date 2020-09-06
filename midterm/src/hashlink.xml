@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hashlinkns">
+	<resultMap type="hash_link" 		id="resultMap">
+		<result property="hash_link_id"  column="hash_link_id"/>
+		<result property="hashkind_id"  column="hashkind_id"/>
+		<result property="hash_id"  column="hash_id"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="select" parameterType="integer" resultMap="resultMap">
+		select * from hash_link where hashkind_id=#{hashkind_id}
+	</select>
+	<select id="selectHash" parameterType="integer" resultMap="resultMap">
+		select * from hash_link where hash_id=#{hash_id}
+	</select>
+	<delete id="deleteAll" parameterType="integer">
+		delete from hash_link where hash_id=#{hash_id}
+	</delete>
+	<delete id="deleteAllKind" parameterType="integer">
+		delete from hash_link where hashkind_id=#{hashkind_id}
+	</delete>
+	<insert id="insert" parameterType="hash_link">
+		insert into hash_link values (hash_link_seq.nextval,#{hashkind_id},#{hash_id})
+	</insert>
+</mapper>

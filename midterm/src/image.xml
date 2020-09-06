@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="imagens">
+	<resultMap type="image" 		id="resultMap">
+		<result property="img_id"  column="img_id"/>
+		<result property="img_path" column="img_path"/>
+		<result property="cafe_id" column="cafe_id"/>
+	</resultMap>
+	<!-- parameterType : 매개변수, resultType 결과 반환값 -->
+	<select id="selectMain" parameterType="integer" resultType="string">
+		select * from 
+		(select img_path from image where cafe_id=#{cafe_id} order by cafe_id)   
+		where rowNum = 1
+	</select>
+	<select id="selectMainCafe" parameterType="integer" resultType="image">
+		select * from 
+		(select * from image where cafe_id=#{cafe_id} order by cafe_id)   
+		where rowNum = 1
+	</select>
+	<select id="select" resultMap="resultMap" parameterType="integer">
+		select * from image where cafe_id=#{cafe_id}
+	</select>
+	<select id="imgcount" parameterType="int" resultType="int">
+		select count(*) from image where cafe_id= #{cafe_id} 
+	</select>
+	<insert id="insert" parameterType="image">
+	insert into image values(img_seq.nextval,#{img_path},#{cafe_id}) 
+	</insert>
+	<update id="update" parameterType="image">
+		update image set img_path=#{img_path} where img_cafe_id#{cafe_id}
+	</update>
+	<delete id="delete" parameterType="integer">
+		delete from image where img_id=#{img_id}
+	</delete>
+</mapper>
